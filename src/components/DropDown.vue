@@ -10,7 +10,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted, onUnmounted } from 'vue'
+import { defineComponent, ref, watch } from 'vue'
+import useClickOutSide from '@/hooks/useClickOutSide'
 
 export default defineComponent({
   name: 'DropDown',
@@ -22,25 +23,15 @@ export default defineComponent({
   },
   setup () {
     const isOpen = ref(false)
+    const dropdownRef = ref<null | HTMLElement>(null)
     const toggleOpen = () => {
       isOpen.value = !isOpen.value
     }
-
-    const dropdownRef = ref<null | HTMLElement>(null)
-    const handler = (e: MouseEvent) => {
-      if (dropdownRef.value) {
-        if (!dropdownRef.value.contains(e.target as HTMLElement) && isOpen.value) {
-          isOpen.value = false
-        }
+    const isClickOutSide = useClickOutSide(dropdownRef)
+    watch(isClickOutSide, () => {
+      if (isOpen.value && isClickOutSide.value) {
+        isOpen.value = false
       }
-    }
-
-    onMounted(() => {
-      document.addEventListener('click', handler)
-    })
-
-    onUnmounted(() => {
-      document.removeEventListener('click', handler)
     })
     return {
       isOpen,
