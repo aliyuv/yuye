@@ -23,6 +23,7 @@ interface RuleProp {
 }
 
 export type RulesProp = RuleProp[]
+
 export default defineComponent({
   props: {
     rules: Array as PropType<RulesProp>,
@@ -62,7 +63,7 @@ export default defineComponent({
       return true
     }
     onMounted(() => {
-      emitter.emit('form-item-created', inputRef.val)
+      emitter.emit('form-item-created', validateInput)
     })
     return {
       inputRef,

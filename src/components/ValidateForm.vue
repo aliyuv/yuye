@@ -10,25 +10,29 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onUnmounted } from 'vue'
+import { defineComponent, onUnmounted, reactive } from 'vue'
 import mitt from 'mitt'
 
-type Events = {
-  'form-item-created': string
-}
+type ValiddateFunc = () => boolean
+// 这个定义是让事件和对应的 callback 一一对应
+type Events = { 'form-item-created': ValiddateFunc }
+// 实例化 mitt 的时候，作为泛型传递进去
 export const emitter = mitt<Events>()
 export default defineComponent({
   emits: ['form-submit'],
   setup (props, context) {
+    let funcAr: ValiddateFunc[] = []
     const submitForm = () => {
-      context.emit('form-submit', true)
+      const result = funcAr.map(func => func()).every(result => result)
+      context.emit('form-submit', result)
     }
-    const callback = (test: string) => {
-      console.log(test)
+    const callback = (func: ValiddateFunc) => {
+      funcAr.push(func)
     }
     emitter.on('form-item-created', callback)
     onUnmounted(() => {
       emitter.off('form-item-created', callback)
+      funcAr = []
     })
     return {
       submitForm

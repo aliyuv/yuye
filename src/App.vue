@@ -85,7 +85,7 @@ export default defineComponent({
       }
     ]
     const onFromSubmit = (result: boolean) => {
-      console.log(inputRef.value.validateInput())
+      console.log(result)
     }
     return {
       list: testData,
