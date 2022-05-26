@@ -4,6 +4,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Home from '@/views/Home.vue'
 import Login from '@/views/Login.vue'
 import ColumnDetail from '@/views/ColumnDetail.vue'
+import store from '@/store'
+import CreatePost from '@/views/CreatePost.vue'
 
 const routerHistory = createWebHistory()
 const router = createRouter({
@@ -23,9 +25,15 @@ const router = createRouter({
       path: '/colum/:id',
       name: 'colum',
       component: ColumnDetail
+    },
+    {
+      path: '/create',
+      name: 'create',
+      component: CreatePost
     }
   ]
 })
 const app = createApp(App)
 app.use(router)
+app.use(store)
 app.mount('#app')
